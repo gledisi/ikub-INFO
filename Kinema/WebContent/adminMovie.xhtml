@@ -1,0 +1,234 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<ui:insert>
+	<ui:include name="header" src="/components/header.xhtml" />
+</ui:insert>
+
+<h:body>
+#{userBean.user.emer}
+	<ui:insert>
+		<ui:include name="header" src="/admin/adminSidebar.xhtml" />
+	</ui:insert>
+
+	<div id="right-panel" class="right-panel">
+
+		<ui:insert>
+			<ui:include name="header" src="/components/rightPanel.xhtml" />
+		</ui:insert>
+
+
+
+		<!-- content-->
+		<div class="content mt-3">
+
+			<!-- forma-->
+
+			<div class="col-lg-12">
+				<h:form>
+					<div class="card">
+						<div class="card-header">
+							<strong>Movie</strong><small> Form</small>
+						</div>
+
+						<div class="card-body card-block">
+
+							<div class="row form-group">
+								<div class="col col-sm-4">
+									<div class="form-group">
+										<label for="titulli" class=" form-control-label">Movie
+											Title</label>
+										<h:inputText id="titulli" value="#{movieBean.movie.title}"
+											class="form-control" a:placeholder="Shrek(english subtitles)" />
+									</div>
+								</div>
+								<div class="col col-sm-3">
+									<div class="form-group">
+
+										<label for="genre" class=" form-control-label">Genre</label>
+										<h:selectOneMenu id="genre" class="form-control"
+											value="#{movieBean.movie.genre}">
+											<f:selectItem itemLabel="Select One" itemValue="" />
+											<f:selectItems value="#{movieBean.list}" />
+										</h:selectOneMenu>
+									</div>
+								</div>
+								<div class="col col-sm-2">
+									<div class="form-group">
+										<label for="length" class="form-control-label">Length</label>
+										<h:inputText id="length" value="#{movieBean.movie.length}"
+											class="form-control" a:placeholder="120" />
+									</div>
+								</div>
+								<div class="col col-sm-2">
+									<div class="form-group">
+										<label for="imdb" class="form-control-label">Imdb</label>
+										<h:inputText id="imdb" value="#{movieBean.movie.imdb}"
+											class="form-control" a:placeholder="7.8" />
+									</div>
+								</div>
+
+							</div>
+
+
+							<div class="row form-group">
+								<div class="col col-sm-3">
+									<div class="form-group">
+										<label class=" form-control-label">Date input</label>
+										<div class="input-group">
+											<div class="input-group-addon">
+												<i class="fa fa-calendar"></i>
+											</div>
+											<h:inputText value="#{movieBean.movie.startDate}">
+												<f:convertDateTime dateStyle="full" pattern="yyyy-MM-dd" />
+											</h:inputText>
+										</div>
+										<small class="form-text text-muted">ex. dd/mm/yyyy</small>
+									</div>
+								</div>
+								<div class="col col-sm-3">
+									<div class="form-group">
+										<label class=" form-control-label">Date input</label>
+										<div class="input-group">
+											<div class="input-group-addon">
+												<i class="fa fa-calendar"></i>
+											</div>
+											<h:inputText value="#{movieBean.movie.endDate}">
+												<f:convertDateTime dateStyle="full" pattern="yyyy-MM-dd" />
+											</h:inputText>
+										</div>
+										<small class="form-text text-muted">ex. dd/mm/yyyy</small>
+									</div>
+								</div>
+
+								<div class="col col-sm-6">
+									<div class="form-group">
+										<label for="storyline" class="form-control-label">StoryLine</label>
+										<div class="input-group">
+											<h:inputTextarea id="storyline"
+												value="#{movieBean.movie.storyline}" class="form-contro"
+												cols="55" rows="3" a:placeholder="Storyline of the movie..." />
+										</div>
+									</div>
+								</div>
+							</div>
+
+
+						</div>
+
+						<div class="card-footer">
+							<div class="offset-md-5 col-md-4">
+								<h:commandButton class="btn btn-primary btn-sm"
+									action="#{movieBean.createMovie()}" value="Submit" />
+								<button type="reset" class="btn btn-danger btn-sm">
+									<i class="fa fa-ban"></i> Reset
+								</button>
+							</div>
+
+						</div>
+					</div>
+				</h:form>
+			</div>
+
+
+
+			<!-- tabela-->
+			<div class="offset-lg-1 col-lg-10">
+				<div class="card">
+					<div class="card-header">
+						<strong class="card-title">Movie's Table</strong>
+					</div>
+					<div class="card-body">
+						<h:form>
+							<p:dataTable var="movie" value="#{movieBean.movies}"
+								style="text-align:center" widgetVar="dataTableWidgetVar"
+								rows="5" paginator="true"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								rowsPerPageTemplate="5,10,15">
+								<p:column headerText="Nr">
+									<h:outputText value="#{movie.id}" />
+								</p:column>
+
+								<p:column headerText="Title">
+									<h:outputText value="#{movie.title}" />
+								</p:column>
+
+								<p:column headerText="Genre">
+									<h:outputText value="#{movie.genre}" />
+								</p:column>
+
+								<p:column headerText="Imdb">
+									<h:outputText value="#{movie.imdb}" />
+								</p:column>
+								<p:column headerText="Edit">
+									<h:commandButton value="Edit" type="button"
+										class="btn btn-primary fa fa-edit" onclick="editModal()"/>
+								</p:column>
+								<p:column headerText="Delete">
+
+									<p:growl id="growl" life="2000" />
+									<p:growl id="messages" showDetail="true" />
+									<p:commandButton value="Delete" style="color:red"
+										actionListener="#{movieBean.deleteMovie(movie.id)}"
+										update="messages"
+										oncomplete="PF('dataTableWidgetVar').filter()">
+
+										<p:confirm header="Confirm" message="Are you sure ?"
+											icon="ui-icon-alert" />
+									</p:commandButton>
+									<p:confirmDialog global="true" showEffect="fade"
+										hideEffect="fade">
+
+										<p:commandButton value="Yes" type="button"
+											styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+										<p:commandButton value="No" type="button"
+											styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+
+									</p:confirmDialog>
+
+								</p:column>
+							</p:dataTable>
+						</h:form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- .content -->
+	</div>
+	<!-- Modal per editimin -->
+	<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="smallmodalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-sm" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="smallmodalLabel">Small Modal</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>
+                                    There are three species of zebras: the plains zebra, the mountain zebra and the Grévy's zebra. The plains zebra
+                                    and the mountain zebra belong to the subgenus Hippotigris, but Grévy's zebra is the sole species of subgenus
+                                    Dolichohippus. The latter resembles an ass, to which it is closely related, while the former two are more
+                                    horse-like. All three belong to the genus Equus, along with other living equids.
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-primary">Confirm</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+	<ui:insert>
+		<ui:include name="footer" src="/components/footer.xhtml" />
+	</ui:insert>
+</h:body>
+</html>
