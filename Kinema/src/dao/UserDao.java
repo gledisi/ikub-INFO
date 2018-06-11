@@ -7,7 +7,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import entitete.User;
-import hibenate.HibernateUtil;
+import hibernate.HibernateUtil;
 
 public class UserDao {
 

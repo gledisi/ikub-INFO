@@ -8,9 +8,9 @@
 
 <h:head>
 
-	<ui:insert>
-		<ui:include name="style" src="/view/components/styleFiles.xhtml" />
-	</ui:insert>
+	
+		<ui:include name="style" src="/components/styleFiles.xhtml" />
+
 </h:head>
 
 <h:body class="bg-dark">
@@ -46,7 +46,7 @@
 								class="form-control" a:placeholder="Surname" />
 						</div>
 						<h:commandButton class="btn btn-primary btn-flat m-b-30 m-t-30"
-							action="#{userCrudBean.createUser()}" value="Register" />
+							action="#{userCrudBean.addUser()}" value="Register" />
 						<div class="register-link m-t-15 text-center">
 							<p>
 								Already have account ?
@@ -59,9 +59,9 @@
 		</div>
 	</div>
 
-	<ui:insert>
-		<ui:include name="footer" src="/view/components/footer.xhtml" />
-	</ui:insert>
+	
+		<ui:include name="footer" src="/components/footer.xhtml" />
+
 </h:body>
 
 </html>

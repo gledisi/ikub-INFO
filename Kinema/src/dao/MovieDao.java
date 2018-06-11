@@ -9,22 +9,20 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import entitete.Movie;
-import hibenate.HibernateUtil;
+import hibernate.HibernateUtil;
 
-public class MovieDao {
+public enum MovieDao {
 
+	INSTANCE;
 	// Querys for Movie
 	private static final String MOVIE_BY_ID = "FROM Movie WHERE id=:id";
 	private static final String ALL_MOVIES = "from Movie";
 	private static final String CURRENT_MOVIES = "FROM `Movie` WHERE `startDate`<=:today AND `endDate`>:today ";
 
-	private SessionFactory sessionFactory;
+	private SessionFactory sessionFactory=HibernateUtil.getSessionFactory();;
 	private Transaction trns = null;
 	private Session session;
 
-	public MovieDao() {
-		sessionFactory = HibernateUtil.getSessionFactory();
-	}
 
 	public boolean add(Movie movie) {
 		session = sessionFactory.openSession();

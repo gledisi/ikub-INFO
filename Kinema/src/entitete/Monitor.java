@@ -3,6 +3,7 @@ package entitete;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -14,44 +15,64 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "monitor")
 public class Monitor {
-	
+
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	@Column
-	private String emer;
-	
+	private String name;
+
 	@ElementCollection
 	@ManyToOne
-    @JoinColumn(name="idHall", nullable=false)
+	@JoinColumn(name = "idHall", nullable = false)
 	private Hall hall;
-	
-	@OneToMany(mappedBy = "monitori")
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "monitor", orphanRemoval = true)
 	private Set<Chair> chairs = new HashSet<>();
-	@OneToMany(mappedBy = "monitori")
+	@OneToMany(cascade = CascadeType.ALL,mappedBy = "monitori")
 	private Set<Show> shows = new HashSet<>();
-	
+
 	public int getId() {
 		return id;
 	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getEmer() {
-		return emer;
+
+	public String getName() {
+		return name;
 	}
-	public void setEmer(String emer) {
-		this.emer = emer;
+
+	public void setName(String name) {
+		this.name = name;
 	}
+
+	public Set<Chair> getChairs() {
+		return chairs;
+	}
+
+	public void setChairs(Set<Chair> chairs) {
+		this.chairs = chairs;
+	}
+
+	public Set<Show> getShows() {
+		return shows;
+	}
+
+	public void setShows(Set<Show> shows) {
+		this.shows = shows;
+	}
+
 	public Hall getHall() {
 		return hall;
 	}
+
 	public void setHall(Hall hall) {
 		this.hall = hall;
 	}
-	
+
 }

@@ -20,26 +20,35 @@ public class LoginBean {
 	private UserDao userDao = new UserDao();
 
 	public String logIn() {
-		System.out.println("u fut");
+
 		// StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
 		User user = userDao.getLoggedUser(email, password);
 		if (user != null) {
 			userBean.setUser(user);
-			System.out.println("u be");
-			return "adminMovie.xhtml?faces-redirect=true";
+			String roli = user.getRoli().getRoli();
+			System.out.println(roli);
+			if (roli.equalsIgnoreCase("Admin")) {
+				return "admin/home.xhtml?faces-redirect=true";
+
+			} else  {
+				return "admin/show.xhtml?faces-redirect=true";
+			}
+		}else {
+			System.out.println("te dhena te pasakta");
 		}
 
 		return null;
 	}
 
 	public String logOut() {
-		System.out.println("u fut");
+
 		userBean.logOut();
 		System.out.println("loging out");
-		return "login.xhtml?faces-redirect=true";
+		return "/login.xhtml?faces-redirect=true";
 	}
 
 	// GETTERS AND SETTERS
+
 	public String getEmail() {
 		return email;
 	}

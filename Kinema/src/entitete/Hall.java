@@ -3,6 +3,7 @@ package entitete;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,10 +21,10 @@ public class Hall {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	@Column
-	private String emer;
+	private String name;
 	
-	@OneToMany(mappedBy = "hall")
-	private Set<Monitor> monitoret = new HashSet<>();
+	@OneToMany(cascade = CascadeType.ALL,mappedBy = "hall")
+	private Set<Monitor> monitors = new HashSet<>();
 	
 	public int getId() {
 		return id;
@@ -31,13 +32,18 @@ public class Hall {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getEmer() {
-		return emer;
+	public String getName() {
+		return name;
 	}
-	public void setEmer(String emer) {
-		this.emer = emer;
+	public void setName(String name) {
+		this.name = name;
 	}
-	
-	
+	public Set<Monitor> getMonitors() {
+		return monitors;
+	}
+	public void setMonitors(Set<Monitor> monitors) {
+		this.monitors = monitors;
+	}
+		
 	
 }

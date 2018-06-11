@@ -7,15 +7,16 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
-import entitete.Movie;
 import entitete.Show;
-import hibenate.HibernateUtil;
+import hibernate.HibernateUtil;
 
 public class ShowDao {
 
 	
-	private static final String GET_SHOW_BY_ID = "FROM Shows WHERE id=:id";
-	private static final String GET_ALL_SHOWS = "from Shows";
+	private static final String GET_SHOW_BY_ID = "FROM shows WHERE id=:id";
+	private static final String GET_MONITORS_SHOW = "FROM Show WHERE idMonitori=:idMonitor";
+	private static final String GET_MOVIES_SHOW = "FROM Show WHERE idMovie=:idMovie";
+	private static final String GET_ALL_SHOWS = "from Show";
 
 	private SessionFactory sessionFactory;
 	private Transaction trns = null;
@@ -72,7 +73,7 @@ public class ShowDao {
 		boolean isDelete = true;
 		try {
 			trns = session.beginTransaction();
-			Show show = (Show) session.load(Movie.class, new Integer(idShow));
+			Show show = (Show) session.load(Show.class, new Integer(idShow));
 			session.delete(show);
 			session.getTransaction().commit();
 		} catch (RuntimeException e) {
@@ -108,6 +109,50 @@ public class ShowDao {
 			session.close();
 		}
 		return allShows;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean getMonitorsShow(int idMonitor) {
+		session = sessionFactory.openSession();
+		List<Show> shows = null;
+		try {
+			trns = session.beginTransaction();
+			Query criteria = session.createQuery(GET_MONITORS_SHOW);
+			criteria.setParameter("idMonitor", idMonitor);
+			shows = (List<Show>) criteria.list();
+			session.getTransaction().commit();
+		} catch (RuntimeException e) {
+			if (trns != null) {
+				trns.rollback();
+			}
+			e.printStackTrace();
+		} finally {
+			session.flush();
+			session.close();
+		}
+		return shows.isEmpty();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Show> getMoviesShow(int idMovie) {
+		session = sessionFactory.openSession();
+		List<Show> shows = null;
+		try {
+			trns = session.beginTransaction();
+			Query criteria = session.createQuery(GET_MOVIES_SHOW);
+			criteria.setParameter("idMovie", idMovie);
+			shows = (List<Show>) criteria.list();
+			session.getTransaction().commit();
+		} catch (RuntimeException e) {
+			if (trns != null) {
+				trns.rollback();
+			}
+			e.printStackTrace();
+		} finally {
+			session.flush();
+			session.close();
+		}
+		return shows;
 	}
 
 	public Show getShow(int idShow) {

@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,14 +23,14 @@ public class Chair {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	@Column
-	private int rreshti;
+	private int row;
 	@Column
-	private int kolona;
+	private int col;
 	
 	@ElementCollection
-	@ManyToOne
-    @JoinColumn(name="idMonitori", nullable=false)
-	private Monitor monitori;
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="idMonitor", nullable=false)
+	private Monitor monitor;
 	
 	@OneToMany(mappedBy = "chair")
 	private Set<Ticket> tickets = new HashSet<>();
@@ -43,23 +44,31 @@ public class Chair {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getRreshti() {
-		return rreshti;
+
+	public int getRow() {
+		return row;
 	}
-	public void setRreshti(int rreshti) {
-		this.rreshti = rreshti;
+	public void setRow(int row) {
+		this.row = row;
 	}
-	public int getKolona() {
-		return kolona;
+	
+	public int getCol() {
+		return col;
 	}
-	public void setKolona(int kolona) {
-		this.kolona = kolona;
+	public void setCol(int col) {
+		this.col = col;
 	}
-	public Monitor getMonitori() {
-		return monitori;
+	public Set<Ticket> getTickets() {
+		return tickets;
 	}
-	public void setMonitori(Monitor monitori) {
-		this.monitori = monitori;
+	public void setTickets(Set<Ticket> tickets) {
+		this.tickets = tickets;
+	}
+	public Monitor getMonitor() {
+		return monitor;
+	}
+	public void setMonitor(Monitor monitori) {
+		this.monitor = monitori;
 	}
 	
 	

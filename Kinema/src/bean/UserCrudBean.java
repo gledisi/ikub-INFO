@@ -1,5 +1,6 @@
 package bean;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.view.ViewScoped;
 
@@ -12,14 +13,16 @@ import entitete.User;
 public class UserCrudBean {
 
 	private User user;
-	private UserDao userDao = new UserDao();
+	private UserDao userDao;
 
-	public UserCrudBean() {
-		super();
-		user = new User();
+
+	@PostConstruct
+	public void init() {
+		this.userDao = new UserDao();
+		this.user = new User();
 	}
 
-	public String createUser() {
+	public String addUser() {
 		Role roli = new Role();
 		roli.setId(1);
 		user.setRoli(roli);

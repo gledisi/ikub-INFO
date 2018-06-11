@@ -1,12 +1,17 @@
 
 package bean;
 
-import java.util.ArrayList;
+
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.view.ViewScoped;
 
+import dao.ReservationDao;
 import dao.ShowDao;
 import entitete.Show;
 
@@ -16,47 +21,63 @@ public class ShowBean {
 
 	private Show show;
 	private ShowDao showDao;
+	private ReservationDao reservationDao;
 	private List<Show> shows;
-	private List<String> movies;
-	private List<String> monitors;
+	private Date dateTime;
+	@ManagedProperty(value = "#{movieBean}")
+	private MovieBean movieBean;
 
-	public ShowBean() {
-		super();
-		this.showDao = new ShowDao();
-		refreshList();
+	@ManagedProperty(value = "#{monitorBean}")
+	private MonitorBean monitorBean;
 
-	}
+	@PostConstruct
+    public void init() {
+		this.showDao =new ShowDao();
+		this.reservationDao=ReservationDao.INSTANCE;
+        refreshBean();
+    }
 
-	public void refreshList() {
+	public void refreshBean() {
 
 		this.show = new Show();
-		this.shows = new ArrayList<>();
-		System.out.println("koheZgjatja" + show.getData());
-
-		try {
-			this.shows.addAll(showDao.getAllShows());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
+		this.shows = showDao.getAllShows();
+		
 	}
 
-	public void createShow() {
+	public String addShow() throws ParseException {
 
-		showDao.add(show);
-		refreshList();
-
+		Show showAdd = new Show();
+		showAdd.setMovie(movieBean.getMovie());
+		showAdd.setMonitori(monitorBean.getMonitor());
+		showAdd.setData(dateTime);
+		showAdd.setOra(dateTime);
+		
+		showDao.add(showAdd);
+		
+		return null;
 	}
 
 	public void deleteShow(int idShow) {
+		if(reservationDao.getShowsReservation(idShow).isEmpty()) {
 		showDao.delete(idShow);
-		refreshList();
+		}else {
+			System.out.println("Show has reservation cant delete");
+		}
 	}
+	
 
 	// GETTERS AND SETTERS
 
 	public Show getShow() {
 		return show;
+	}
+
+	public MovieBean getMovieBean() {
+		return movieBean;
+	}
+
+	public void setMovieBean(MovieBean movieBean) {
+		this.movieBean = movieBean;
 	}
 
 	public void setShow(Show show) {
@@ -79,20 +100,20 @@ public class ShowBean {
 		this.shows = shows;
 	}
 
-	public List<String> getMovies() {
-		return movies;
+	public MonitorBean getMonitorBean() {
+		return monitorBean;
 	}
 
-	public void setMovies(List<String> movies) {
-		this.movies = movies;
+	public void setMonitorBean(MonitorBean monitorBean) {
+		this.monitorBean = monitorBean;
 	}
 
-	public List<String> getMonitors() {
-		return monitors;
+	public Date getDateTime() {
+		return dateTime;
 	}
 
-	public void setMonitors(List<String> monitors) {
-		this.monitors = monitors;
+	public void setDateTime(Date dateTime) {
+		this.dateTime = dateTime;
 	}
 
 }

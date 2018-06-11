@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -40,7 +41,7 @@ public class Movie {
 	@Temporal(TemporalType.DATE)
 	private Date endDate;
 	
-	@OneToMany(mappedBy = "movie")
+	@OneToMany(cascade=CascadeType.ALL,mappedBy = "movie")
 	private Set<Show> shows = new HashSet<>();
 	
 

@@ -39,13 +39,14 @@
 			</a>
 
 			<div class="user-menu dropdown-menu">
-				<a class="nav-link" href="#"><i class="fa fa- user"></i>My
-					Profile</a>
+				<a class="nav-link" href="admin/adminProfile.xhtml"><i
+					class="fa fa- user"></i>My Profile</a>
 				<h:form>
-					<h:commandLink class="fa fa-sign-out pull-right" value="Log out"
-						action="#{loginBean.logOut()}" />
+					<h:commandLink class="nav-link" action="#{loginBean.logOut()}">
+						<i class="fa fa- user"></i>Log out</h:commandLink>
 				</h:form>
 			</div>
+
 		</div>
 	</div>
 </div>

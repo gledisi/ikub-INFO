@@ -4,11 +4,16 @@ package bean;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.view.ViewScoped;
 
+import dao.GenreDao;
 import dao.MovieDao;
+import dao.ReservationDao;
+import dao.ShowDao;
 import entitete.Movie;
+import entitete.Show;
 
 @ManagedBean
 @ViewScoped
@@ -16,44 +21,55 @@ public class MovieBean {
 
 	private Movie movie;
 	private MovieDao movieDao;
+	private GenreDao genreDao;
+	private ShowDao showDao;
+	private ReservationDao reservationDao;
 	private List<Movie> movies;
-	private List<String> list ;
+	private List<String> allGenres=new ArrayList<>() ;
 
-	public MovieBean() {
-		super();
-		this.movieDao = new MovieDao();
-		refreshList();
-		 list = new ArrayList<String>() {{
-			    add("Aksion");
-			    add("Drame");
-			    add("Fantazi");
-			}};
-	}
 	
-	public void refreshList() {
+	@PostConstruct
+    public void init() {
+		this.movieDao = MovieDao.INSTANCE;
+		this.genreDao = GenreDao.INSTANCE;
+		this.showDao = new ShowDao();
+		this.reservationDao = ReservationDao.INSTANCE;
+		//allGenres = genreDao.getAllGenres();
+		allGenres.add("Aksion");
+		
+        refreshBean();
+    }
+	
+	public void refreshBean() {
 		
 		this.movie = new Movie();		
-		this.movies = new ArrayList<>();
-		System.out.println("koheZgjatja"+movie.getStartDate());
-		
-		try {
-			this.movies.addAll(movieDao.getAllMovies());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		this.movies = movieDao.getAllMovies();
 		
 	}
 
 	public void createMovie() {
 		
-		System.out.println("koheZgjatja"+movie.getStartDate());
 		movieDao.add(movie);
 		
-		refreshList();
+		refreshBean();
 	}
 	public void deleteMovie(int idMovie) {
+		if(canDeleteMovie(idMovie)) {
 		movieDao.delete(idMovie);
-		refreshList();
+		}else {
+			System.out.println("Movie has shows with reservation");
+		}		
+	}
+	
+	private boolean canDeleteMovie(int idMovie) {
+		boolean canDelete = true;
+		List<Show> shows = showDao.getMoviesShow(idMovie);
+		for (Show show : shows) {
+			if(!reservationDao.getShowsReservation(show.getId()).isEmpty()) {
+				canDelete =false;
+			}
+		}
+		return canDelete;
 	}
 	
 	// GETTERS AND SETTERS
@@ -82,13 +98,22 @@ public class MovieBean {
 		this.movies = movies;
 	}
 
-	public List<String> getList() {
-		return list;
+	public GenreDao getGenreDao() {
+		return genreDao;
 	}
 
-	public void setList(List<String> list) {
-		this.list = list;
+	public void setGenreDao(GenreDao genreDao) {
+		this.genreDao = genreDao;
 	}
+
+	public List<String> getAllGenres() {
+		return allGenres;
+	}
+
+	public void setAllGenres(List<String> allGenres) {
+		this.allGenres = allGenres;
+	}
+
 	
 	
 }

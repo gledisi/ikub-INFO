@@ -1,6 +1,6 @@
 package entitete;
 
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,6 +14,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 
 @Entity
@@ -25,8 +27,8 @@ public class Reservation {
 	private int id;
 	@Column
 	private int cmimi;
-	@Column
-	private LocalDate dataRezervimit;
+	@Temporal(TemporalType.DATE)
+	private Date dataRezervimit;
 	
 	@ElementCollection
 	@ManyToOne
@@ -54,11 +56,18 @@ public class Reservation {
 	public void setCmimi(int cmimi) {
 		this.cmimi = cmimi;
 	}
-	public LocalDate getDataRezervimit() {
+
+	public Date getDataRezervimit() {
 		return dataRezervimit;
 	}
-	public void setDataRezervimit(LocalDate dataRezervimit) {
+	public void setDataRezervimit(Date dataRezervimit) {
 		this.dataRezervimit = dataRezervimit;
+	}
+	public Set<Ticket> getTickets() {
+		return tickets;
+	}
+	public void setTickets(Set<Ticket> tickets) {
+		this.tickets = tickets;
 	}
 	public Show getShow() {
 		return show;

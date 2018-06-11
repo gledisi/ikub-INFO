@@ -41,13 +41,13 @@ public class UserFilter implements Filter {
 		if(user!=null){
 			if(user.getRoli().getRoli().equals("Admin")) {
 				if(!currentPath.contains("admin") && !allowed(currentPath)){
-					res.sendRedirect("adminMovie.xhtml");
+					res.sendRedirect("admin/home.xhtml");
 				}  else {
 					chain.doFilter(request, response);
 				}
-			} else if(user.getRoli().getRoli().equals("Klient")) {
-				if(!currentPath.contains("klient") && !allowed(currentPath)) {
-					res.sendRedirect("klientMovie.xhtml");
+			} else if(user.getRoli().getRoli().equals("Client")) {
+				if(!currentPath.contains("Client") && !allowed(currentPath)) {
+					res.sendRedirect("show.xhtml");
 				} else {
 					chain.doFilter(request, response);
 				}
