@@ -20,7 +20,7 @@
 	<div id="right-panel" class="right-panel">
 
 		<ui:insert>
-			<ui:include name="header" src="/components/rightPanel.xhtml" />
+			<ui:include name="header" src="rightPanel.xhtml" />
 		</ui:insert>
 
 
@@ -46,7 +46,9 @@
 										<label for="name" class=" form-control-label">Monitor
 											Name </label>
 										<h:inputText id="name" value="#{monitorBean.monitor.name}"
-											class="form-control" a:placeholder="Monitor one" />
+											class="form-control" a:placeholder="Monitor one"
+											required="true"
+											requiredMessage="Emri monitorit nuk duhet bosh!" />
 									</div>
 								</div>
 								<div class="col col-sm-3">
@@ -55,7 +57,8 @@
 										<label for="hall" class=" form-control-label">Hall</label>
 
 										<p:selectOneMenu value="#{hallBean.hall.id}"
-											style="width:230px">
+											style="width:230px" required="true"
+											requiredMessage="Zgjidhni Sallen!">
 											<f:selectItem itemLabel="Hall" />
 											<f:selectItems value="#{hallBean.halls}" var="hall"
 												itemValue="#{hall.id}" itemLabel="#{hall.name}" />
@@ -66,14 +69,24 @@
 									<div class="form-group">
 										<label for="rows" class="form-control-label">Rows</label>
 										<h:inputText id="rows" value="#{monitorBean.rows}"
-											class="form-control" a:placeholder="6" />
+											class="form-control" a:placeholder="6"
+											required="true"
+											requiredMessage="Numri rreshtave eshte bosh!"
+											validatorMessage="Rreshti karrigeve: Jepni nje numer nga 5-25 !">
+											<f:validateLongRange minimum="5" maximum="25" />
+										</h:inputText>
 									</div>
 								</div>
 								<div class="col col-sm-2">
 									<div class="form-group">
 										<label for="columns" class="form-control-label">Columns</label>
 										<h:inputText id="columns" value="#{monitorBean.columns}"
-											class="form-control" a:placeholder="8" />
+											class="form-control" a:placeholder="8"
+											required="true"
+											requiredMessage="Numri Kolonave eshte bosh!"
+											validatorMessage="Kolona karrigeve: Jepni nje numer nga 5-25 !">
+											<f:validateLongRange minimum="5" maximum="25" />
+										</h:inputText>
 									</div>
 								</div>
 							</div>
@@ -117,11 +130,11 @@
 								</p:column>
 
 								<p:column headerText="Hall name">
-									<h:outputText value="#{hallBean.hall.name}" />
+									<h:outputText value="#{monitor.hall.name}" />
 								</p:column>
 
 								<p:column headerText="chairs">
-									<h:outputText value="0" />
+									<h:outputText value="#{monitorBean.countChairs(monitor.id)}" />
 								</p:column>
 
 								<p:column headerText="Edit">
@@ -130,7 +143,7 @@
 								</p:column>
 								<p:column headerText="Delete">
 
-									<p:growl id="growl" life="2000" />
+									<p:growl id="growl" life="2500" />
 									<p:growl id="messages" showDetail="true" />
 									<p:commandButton value="Delete" styleClass="deleteButton"
 										actionListener="#{monitorBean.deleteMonitor(monitor.id)}"

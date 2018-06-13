@@ -13,8 +13,10 @@
 <h:body>
 
 	<ui:include name="header" src="/admin/adminSidebar.xhtml" />
-	<ui:include name="content" src="/components/profile.xhtml" />
-
+	<div id="right-panel" class="right-panel">
+		<ui:include name="rightPanel" src="rightPanel.xhtml" />
+		<ui:include name="content" src="/components/profile.xhtml" />
+	</div>
 
 </h:body>
 </html>

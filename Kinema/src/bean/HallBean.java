@@ -11,6 +11,7 @@ import dao.MonitorDao;
 import dao.ShowDao;
 import entitete.Hall;
 import entitete.Monitor;
+import utility.Messages;
 
 @ManagedBean
 @ViewScoped
@@ -36,28 +37,55 @@ public class HallBean {
 		this.halls = hallDao.getAllHalls();
 
 	}
-	
-	public void addHall() {
+
+	public String addHall() {
+
 		Hall addHall = new Hall();
 		addHall.setName(hall.getName());
-		hallDao.addHall(addHall);
-		refreshBean();
-	}
-	
-	public String deleteHall(int idHall) {
-		if(canDeleteShow(idHall)) {
-		hallDao.deleteHall(idHall);
-		}else {
-			System.out.println("This hall has monitors with show");
+		if (canAddHall(addHall.getName())) {
+
+			if (hallDao.addHall(addHall)) {
+				Messages.addMessage("Salla u shtua!");
+			} else {
+				Messages.addMessage("Salla nuk u shtua!");
+			}
+
+			refreshBean();
+		} else {
+			Messages.addMessage("Salla me kete emer ekziston!");
 		}
-		return null;		
+
+		return null;
 	}
-	
-	private boolean canDeleteShow(int idHall) {
+
+	public String deleteHall(int idHall) {
+		
+		if (canDeleteHall(idHall)) {
+
+			if (hallDao.deleteHall(idHall)) {
+				Messages.addMessage("Salla u fshi!");
+			} else {
+				Messages.addMessage("Salla nuk u fshi!");
+			}
+			
+		} else {
+			Messages.addMessage("Salla ka filmi qe po shfaqen!");
+		}
+		
+		refreshBean();
+		return null;
+	}
+
+	private boolean canAddHall(String name) {
+		List<Hall> halls = hallDao.getHallByName(name);
+		return halls.isEmpty();
+	}
+
+	private boolean canDeleteHall(int idHall) {
 		boolean canDelete = true;
 		List<Monitor> monitors = monitorDao.getHallMonitors(idHall);
 		for (Monitor monitor : monitors) {
-			if(!showDao.getMonitorsShow(monitor.getId())) {
+			if (!showDao.getMonitorsShow(monitor.getId()).isEmpty()) {
 				canDelete = false;
 			}
 		}

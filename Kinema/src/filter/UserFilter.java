@@ -33,30 +33,30 @@ public class UserFilter implements Filter {
 			throws IOException, ServletException {
 		HttpServletResponse res = (HttpServletResponse) response;
 		HttpSession session = ((HttpServletRequest) request).getSession(false);
-		UserBean userBean = (session != null) ? (UserBean) session
-				.getAttribute("userBean") : null;
+		UserBean userBean = (session != null) ? (UserBean) session.getAttribute("userBean") : null;
 		User user = (userBean != null) ? userBean.getUser() : null;
-		String currentPath = ((HttpServletRequest) request).getRequestURL()
-				.toString();
-		if(user!=null){
-			if(user.getRoli().getRoli().equals("Admin")) {
-				if(!currentPath.contains("admin") && !allowed(currentPath)){
+		String currentPath = ((HttpServletRequest) request).getRequestURL().toString();
+		if (user != null) {
+			if (user.getRoli().getRoli().equals("Admin")) {
+				if (!currentPath.contains("admin") && !allowed(currentPath)) {
 					res.sendRedirect("admin/home.xhtml");
-				}  else {
+				} else {
 					chain.doFilter(request, response);
 				}
-			} else if(user.getRoli().getRoli().equals("Client")) {
-				if(!currentPath.contains("Client") && !allowed(currentPath)) {
-					res.sendRedirect("show.xhtml");
+			} else if (user.getRoli().getRoli().equals("Client")) {
+				if (!currentPath.contains("client") && !allowed(currentPath)) {
+					res.sendRedirect("client/clientHome.xhtml");
 				} else {
 					chain.doFilter(request, response);
 				}
 			}
 		} else {
-
+				currentPath.replace("admin/", "");
 			if (!allowed(currentPath) && !currentPath.contains("login")) {
 				if (!currentPath.contains("sign-up")) {
-
+					
+					System.out.println(currentPath);
+//					res.sendRedirect(currentPath.replace("admin/", "").replace("", replacement));
 					res.sendRedirect("login.xhtml");
 
 				} else {
@@ -69,7 +69,7 @@ public class UserFilter implements Filter {
 			}
 
 		}
-		
+
 	}
 
 	@Override

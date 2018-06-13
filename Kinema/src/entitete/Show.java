@@ -28,9 +28,9 @@ public class Show {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	@Temporal(TemporalType.DATE)
-	private Date data;
+	private Date date;
 	@Temporal(TemporalType.TIME)
-	private Date ora;
+	private Date time;
 	
 	@OneToMany(mappedBy = "show")
 	private Set<Reservation> reservations = new HashSet<>();
@@ -51,18 +51,18 @@ public class Show {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
-	public Date getData() {
-		return data;
+
+	public Date getDate() {
+		return date;
 	}
-	public void setData(Date data) {
-		this.data = data;
+	public void setDate(Date date) {
+		this.date = date;
 	}
-	public Date getOra() {
-		return ora;
+	public Date getTime() {
+		return time;
 	}
-	public void setOra(Date ora) {
-		this.ora = ora;
+	public void setTime(Date time) {
+		this.time = time;
 	}
 	public Set<Reservation> getReservations() {
 		return reservations;

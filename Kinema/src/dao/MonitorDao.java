@@ -13,10 +13,12 @@ import hibernate.HibernateUtil;
 public class MonitorDao {
 
 	private static final String GET_MONITOR_BY_ID = "FROM Monitor WHERE id=:id";
+	private static final String GET_MONITOR_BY_NAME = "FROM Monitor WHERE name=:name";
 	private static final String GET_ALL_MONITORS = "from Monitor";
 	private static final String GET_HALL_MONITORS = "from Monitor Where idHall=:idHall";
 	private static final String COUNT_MONITORS = "select count(*) from Monitor Where idHall=:idHall";
-	
+	private static final String COUNT_CHAIRS = "select count(*) from Chair Where idMonitor=:idMonitor";
+
 	private SessionFactory sessionFactory;
 	private Transaction trns = null;
 	private Session session;
@@ -45,7 +47,7 @@ public class MonitorDao {
 
 		return isAdd;
 	}
-	
+
 	public boolean deleteMonitor(int idMonitor) {
 		session = sessionFactory.openSession();
 		boolean isDelete = true;
@@ -111,7 +113,7 @@ public class MonitorDao {
 		return hallMonitors;
 	}
 
-	public Monitor getMonitor(int idMonitor) {
+	public Monitor getMonitorById(int idMonitor) {
 		session = sessionFactory.openSession();
 		Monitor monitor = null;
 		try {
@@ -131,7 +133,27 @@ public class MonitorDao {
 		}
 		return monitor;
 	}
-	
+
+	public Monitor getMonitorByName(String name) {
+		session = sessionFactory.openSession();
+		Monitor monitor = null;
+		try {
+			trns = session.beginTransaction();
+			Query criteria = session.createQuery(GET_MONITOR_BY_NAME);
+			criteria.setParameter("name", name);
+			monitor = (Monitor) criteria.uniqueResult();
+			session.getTransaction().commit();
+		} catch (RuntimeException e) {
+			if (trns != null) {
+				trns.rollback();
+			}
+			e.printStackTrace();
+		} finally {
+			session.flush();
+			session.close();
+		}
+		return monitor;
+	}
 
 	public long countMonitors(int idHall) {
 		session = sessionFactory.openSession();
@@ -152,6 +174,27 @@ public class MonitorDao {
 			session.close();
 		}
 		return nrMonitors;
+	}
+
+	public long countChairs(int idMonitor) {
+		session = sessionFactory.openSession();
+		long nrChairs = 0;
+		try {
+			trns = session.beginTransaction();
+			Query criteria = session.createQuery(COUNT_CHAIRS);
+			criteria.setParameter("idMonitor", idMonitor);
+			nrChairs = (long) criteria.uniqueResult();
+			session.getTransaction().commit();
+		} catch (RuntimeException e) {
+			if (trns != null) {
+				trns.rollback();
+			}
+			e.printStackTrace();
+		} finally {
+			session.flush();
+			session.close();
+		}
+		return nrChairs;
 	}
 
 }

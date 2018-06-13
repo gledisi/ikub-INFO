@@ -9,76 +9,111 @@
 
 
 <h:body>
-
+	<p:growl id="hall" life="2000" />
 
 	<div id="right-panel" class="right-panel">
-
-		<ui:include name="header" src="/components/rightPanel.xhtml" />
-
 
 
 		<!-- content-->
 		<div class="content mt-2">
+			<div class="row">
+				<!-- forma1-->
+				<div class="col-lg-6">
+					<div class="card">
+						<div class="card-header">
+							<strong class="card-title">Credit Card</strong>
+						</div>
+						<div class="card-body">
+							<!-- Credit Card -->
+							<div id="pay-invoice">
+								<h:form>
+									<div class="card-body">
+										<div class="card-title">
+											<h3 class="text-center">Edit Profile</h3>
+										</div>
 
-			<!-- forma-->
 
-			<div class="card">
-				<div class="card-header">
-					<strong class="card-title">Credit Card</strong>
-				</div>
-				<div class="card-body">
-					<!-- Credit Card -->
-					<div id="pay-invoice">
-						<h:form>
-							<div class="card-body">
-								<div class="card-title">
-									<h3 class="text-center">Pay Invoice</h3>
-								</div>
-
-
-								<div class="form-group">
-									<label for="cc-payment" class="control-label mb-1">Name</label>
-									<h:inputText class="form-control" />
-								</div>
-								<div class="form-group has-success">
-									<label for="cc-name" class="control-label mb-1">Surname</label>
-									<h:inputText class="form-control" />
-								</div>
-								<div class="form-group">
-									<label for="cc-number" class="control-label mb-1">Card
-										number</label>
-									<h:inputText class="form-control" />
-								</div>
-								<div class="row">
-									<div class="col-6">
 										<div class="form-group">
-											<label for="cc-exp" class="control-label mb-1">Expiration</label>
-											<h:inputText class="form-control" />
+											<label for="name" class="control-label mb-1">Name</label>
+											<h:inputText id="name" class="form-control"
+												value="#{userBean.user.emer}">
+											</h:inputText>
 										</div>
-									</div>
-									<div class="col-6">
-										<label for="x_card_code" class="control-label mb-1">Security
-											code</label>
-										<div class="input-group">
-											<h:inputText class="form-control" />
+										<div class="form-group has-success">
+											<label for="surname" class="control-label mb-1">Surname</label>
+											<h:inputText id="surname" class="form-control"
+												value="#{userBean.user.mbiemer}" />
 										</div>
+										<div class="form-group">
+											<label for="email" class="control-label mb-1">Email</label>
+											<h:inputText id="email" class="form-control"
+												value="#{userBean.user.email}" />
+										</div>
+
 									</div>
-								</div>
+									<div>
+										<h:commandButton id="save" type="submit"
+											action="#{userCrudBean.editUser()}"
+											class="btn btn-lg btn-info btn-block" value="Save">
+										</h:commandButton>
+									</div>
+								</h:form>
 							</div>
-							<div>
-								<button id="payment-button" type="submit"
-									class="btn btn-lg btn-info btn-block">
-									<i class="fa fa-lock fa-lg"></i>&nbsp; <span
-										id="payment-button-amount">Save</span>
-								</button>
-							</div>
-						</h:form>
+						</div>
 					</div>
 				</div>
+				<!-- forma2-->
+				<div class="col-lg-6">
+					<div class="card">
+						<div class="card-header">
+							<strong class="card-title">Credit Card</strong>
+						</div>
+						<div class="card-body">
+							<!-- Credit Card -->
+							<div id="pay-invoice">
+								<h:form>
+									<div class="card-body">
+										<div class="card-title">
+											<h3 class="text-center">Change password</h3>
+										</div>
+
+
+										<div class="form-group">
+											<label for="name" class="control-label mb-1">Old
+												Password</label>
+											<h:inputSecret id="name" class="form-control"
+												value="#{userCrudBean.user.password}">
+											</h:inputSecret>
+										</div>
+										<div class="form-group has-success">
+											<label for="surname" class="control-label mb-1">New
+												Password</label>
+											<h:inputSecret id="surname" class="form-control"
+												value="#{userCrudBean.newPassword}" />
+										</div>
+										<div class="form-group">
+											<label for="email" class="control-label mb-1">Confirm
+												Password</label>
+											<h:inputSecret id="email" class="form-control"
+												value="#{userCrudBean.confirmPassword}" />
+										</div>
+
+									</div>
+									<div>
+										<h:commandButton id="save" type="submit" update="growl"
+											action="#{userCrudBean.changePassword()}"
+											class="btn btn-lg btn-info btn-block" value="Save">
+										</h:commandButton>
+									</div>
+								</h:form>
+							</div>
+						</div>
+					</div>
+				</div>
+
 			</div>
 		</div>
 	</div>
 	<ui:include name="footer" src="/components/footer.xhtml" />
-
 </h:body>
 </html>

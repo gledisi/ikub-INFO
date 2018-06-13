@@ -26,12 +26,11 @@ public class LoginBean {
 		if (user != null) {
 			userBean.setUser(user);
 			String roli = user.getRoli().getRoli();
-			System.out.println(roli);
-			if (roli.equalsIgnoreCase("Admin")) {
-				return "admin/home.xhtml?faces-redirect=true";
-
+			if (roli.equalsIgnoreCase("Client")) {
+				
+				return "client/clientHome.xhtml?faces-redirect=true";
 			} else  {
-				return "admin/show.xhtml?faces-redirect=true";
+				return "admin/home.xhtml?faces-redirect=true";
 			}
 		}else {
 			System.out.println("te dhena te pasakta");

@@ -33,9 +33,9 @@ public class Movie {
 	@Column
 	private String storyline;
 	@Column
-	private double imdb;
+	private Double imdb;
 	@Column
-	private int length;
+	private Integer length;
 	@Temporal(TemporalType.DATE)
 	private Date startDate;
 	@Temporal(TemporalType.DATE)
@@ -70,16 +70,16 @@ public class Movie {
 	public void setStoryline(String storyline) {
 		this.storyline = storyline;
 	}
-	public double getImdb() {
+	public Double getImdb() {
 		return imdb;
 	}
-	public void setImdb(double imdb) {
+	public void setImdb(Double imdb) {
 		this.imdb = imdb;
 	}
-	public int getLength() {
+	public Integer getLength() {
 		return length;
 	}
-	public void setLength(int length) {
+	public void setLength(Integer length) {
 		this.length = length;
 	}
 	public Date getStartDate() {

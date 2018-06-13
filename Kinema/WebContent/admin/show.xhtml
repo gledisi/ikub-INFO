@@ -20,7 +20,7 @@
 	<div id="right-panel" class="right-panel">
 
 		<ui:insert>
-			<ui:include name="header" src="/components/rightPanel.xhtml" />
+			<ui:include name="header" src="rightPanel.xhtml" />
 		</ui:insert>
 
 
@@ -47,7 +47,8 @@
 										<label for="movie" class=" form-control-label">Movie</label>
 
 										<p:selectOneMenu value="#{movieBean.movie.id}"
-											style="width:230px">
+											style="width:230px" required="true"
+											requiredMessage="Zgjidhni Filmin!">
 											<f:selectItem itemLabel="Title" />
 											<f:selectItems value="#{movieBean.movies}" var="movie"
 												itemValue="#{movie.id}" itemLabel="#{movie.title}" />
@@ -61,11 +62,14 @@
 										<label for="movie" class=" form-control-label">Hall</label>
 
 										<p:selectOneMenu value="#{hallBean.hall.id}"
-											style="width:200px">
+											style="width:200px" required="true"
+											requiredMessage="Zgjidhni Sallen!">
+											<p:ajax listener="#{monitorBean.getHallsMonitors()}"
+												update="monitor" process="@this" />
 											<f:selectItem itemLabel="Hall Name" />
 											<f:selectItems value="#{hallBean.halls}" var="hall"
 												itemValue="#{hall.id}" itemLabel="#{hall.name}" />
-											<p:ajax update="monitor" listener="#{monitorBean.init()}" />
+											
 										</p:selectOneMenu>
 									</div>
 								</div>
@@ -74,10 +78,12 @@
 
 										<label for="monitor" class=" form-control-label">Monitor</label>
 										<p:selectOneMenu id="monitor" style="width:180px"
-											value="#{monitorBean.monitor.id}">
+											value="#{monitorBean.monitor.id}" required="true"
+											requiredMessage="Zgjidhni Monitorin!">
 											<f:selectItem itemLabel="Monitor Name" />
-											<f:selectItems value="#{monitorBean.monitors}" var="monitor"
-												itemValue="#{monitor.id}" itemLabel="#{monitor.name}" />
+											<f:selectItems value="#{monitorBean.hallMonitors}"
+												var="monitor" itemValue="#{monitor.id}"
+												itemLabel="#{monitor.name}" />
 										</p:selectOneMenu>
 									</div>
 								</div>
@@ -88,8 +94,11 @@
 											<div class="input-group-addon" id="showDate">
 												<i class="fa fa-calendar"></i>
 											</div>
-											<h:inputText styleClass="showDate" value="#{showBean.dateTime}">
-											<f:convertDateTime dateStyle="full" pattern="yyyy-MM-dd HH:mm" />
+											<h:inputText styleClass="showDate"
+												value="#{showBean.dateTime}" required="true"
+												requiredMessage="Zgjidhni daten dhe oren e fillimit te shfaqjes!">
+												<f:convertDateTime dateStyle="full"
+													pattern="yyyy-MM-dd HH:mm" />
 											</h:inputText>
 										</div>
 									</div>
@@ -102,7 +111,7 @@
 							<div class="offset-md-5 col-md-4">
 
 
-								<h:commandLink class="btn btn-primary btn-sm"
+								<h:commandButton class="btn btn-primary btn-sm"
 									action="#{showBean.addShow()}" value="Submit" />
 
 								<h:commandButton class="btn btn-danger btn-sm" type="reset"
@@ -138,13 +147,13 @@
 								</p:column>
 
 								<p:column headerText="Date">
-									<h:outputText value="#{show.data}" />
+									<h:outputText value="#{show.date}" />
 								</p:column>
 
 								<p:column headerText="Time">
-									<h:outputText value="#{show.ora}" >
-									 <f:convertDateTime type="date" pattern="HH:mm"/>
-									 </h:outputText>
+									<h:outputText value="#{show.time}">
+										<f:convertDateTime type="date" pattern="HH:mm" />
+									</h:outputText>
 								</p:column>
 								<p:column headerText="Edit">
 									<h:commandButton value="Edit" type="button"

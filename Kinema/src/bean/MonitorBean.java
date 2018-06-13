@@ -13,6 +13,8 @@ import dao.MonitorDao;
 import dao.ShowDao;
 import entitete.Chair;
 import entitete.Monitor;
+import entitete.Show;
+import utility.Messages;
 
 @ManagedBean
 @ViewScoped
@@ -24,8 +26,8 @@ public class MonitorBean {
 	private List<Monitor> monitors;
 	private List<Monitor> hallMonitors;
 
-	private int rows;
-	private int columns;
+	private Integer rows;
+	private Integer columns;
 
 	@ManagedProperty(value = "#{hallBean}")
 	private HallBean hallBean;
@@ -42,8 +44,18 @@ public class MonitorBean {
 		this.monitor = new Monitor();
 		this.monitors = monitorDao.getAllMonitors();
 	}
+		
+	
 
-	public void addMonitor() {
+	public void getHallsMonitors(){
+		this.hallMonitors = monitorDao.getHallMonitors(hallBean.getHall().getId());
+	for (Monitor monitor : hallMonitors) {
+		System.out.println(monitor.getId());
+	}
+		
+}
+	
+	public String addMonitor() {
 		Monitor addMonitor = new Monitor();
 
 		Set<Chair> chairs = createChairs(addMonitor);
@@ -51,23 +63,44 @@ public class MonitorBean {
 		addMonitor.setName(monitor.getName());
 		addMonitor.setChairs(chairs);
 
-		monitorDao.addMonitor(addMonitor);
+		if (canAddMonitor(addMonitor.getName())) {
+			if (monitorDao.addMonitor(addMonitor)) {
+				Messages.addMessage("Monitori u shtua!");
+			} else {
+				Messages.addMessage("Monitori nuk u shtua!");
+			}
+		} else {
+			Messages.addMessage("Monitori me kete emer ekziston!");
+		}
+
 		refreshBean();
+		
+		return null;
 	}
 
-	public void deleteMonitor(int idMonitor) {
-		if (showDao.getMonitorsShow(idMonitor)) {
-			monitorDao.deleteMonitor(idMonitor);
-			System.out.println("S'ka shfaqje");
-		}else {
-			System.out.println("Shfaqjet e monitorit"+monitor.getShows());
-			System.out.println("Ky monitor ka shfaqje");
-		}		
+	public String deleteMonitor(int idMonitor) {
+		if (canDeleteMonitor(idMonitor)) {
+			if (monitorDao.deleteMonitor(idMonitor)) {
+				Messages.addMessage("Monitori u fshi!");
+			} else {
+				Messages.addMessage("Monitori nuk u fshi!");
 
+			}
+		} else {
+			Messages.addMessage("Ne kete monitor po shfaqen filma!");
+		}
+		
+		refreshBean();
+		
+		return null;
 	}
 
 	public long countMonitors(int idHall) {
 		return monitorDao.countMonitors(idHall);
+	}
+
+	public long countChairs(int idMonitor) {
+		return monitorDao.countChairs(idMonitor);
 	}
 
 	private Set<Chair> createChairs(Monitor addMonitor) {
@@ -83,6 +116,20 @@ public class MonitorBean {
 			}
 		}
 		return chairs;
+	}
+
+	public boolean canAddMonitor(String name) {
+		boolean isNull = true;
+		Monitor monitor = monitorDao.getMonitorByName(name);
+		if (monitor != null) {
+			isNull = false;
+		}
+		return isNull;
+	}
+
+	public boolean canDeleteMonitor(int idMonitor) {
+		List<Show> shows = showDao.getMonitorsShow(idMonitor);
+		return shows.isEmpty();
 	}
 
 	// GETTERS AND SETTERS
@@ -127,19 +174,19 @@ public class MonitorBean {
 		this.hallBean = hallBean;
 	}
 
-	public int getRows() {
+	public Integer getRows() {
 		return rows;
 	}
 
-	public void setRows(int rows) {
+	public void setRows(Integer rows) {
 		this.rows = rows;
 	}
 
-	public int getColumns() {
+	public Integer getColumns() {
 		return columns;
 	}
 
-	public void setColumns(int columns) {
+	public void setColumns(Integer columns) {
 		this.columns = columns;
 	}
 
@@ -150,6 +197,5 @@ public class MonitorBean {
 	public void setShowDao(ShowDao showDao) {
 		this.showDao = showDao;
 	}
-	
 
 }

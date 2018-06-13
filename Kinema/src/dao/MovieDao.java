@@ -16,6 +16,7 @@ public enum MovieDao {
 	INSTANCE;
 	// Querys for Movie
 	private static final String MOVIE_BY_ID = "FROM Movie WHERE id=:id";
+	private static final String MOVIE_BY_TITLE = "FROM Movie WHERE title=:title";
 	private static final String ALL_MOVIES = "from Movie";
 	private static final String CURRENT_MOVIES = "FROM `Movie` WHERE `startDate`<=:today AND `endDate`>:today ";
 
@@ -109,13 +110,34 @@ public enum MovieDao {
 		return allMovies;
 	}
 
-	public Movie getMovie(int idMovie) {
+	public Movie getMoviebyId(int idMovie) {
 		session = sessionFactory.openSession();
 		Movie movie = null;
 		try {
 			trns = session.beginTransaction();
 			Query criteria = session.createQuery(MOVIE_BY_ID);
 			criteria.setParameter("id", idMovie);
+			movie = (Movie) criteria.uniqueResult();
+			session.getTransaction().commit();
+		} catch (RuntimeException e) {
+			if (trns != null) {
+				trns.rollback();
+			}
+			e.printStackTrace();
+		} finally {
+			session.flush();
+			session.close();
+		}
+		return movie;
+	}
+	
+	public Movie getMoviebyTitle(String title) {
+		session = sessionFactory.openSession();
+		Movie movie = null;
+		try {
+			trns = session.beginTransaction();
+			Query criteria = session.createQuery(MOVIE_BY_TITLE);
+			criteria.setParameter("title", title);
 			movie = (Movie) criteria.uniqueResult();
 			session.getTransaction().commit();
 		} catch (RuntimeException e) {

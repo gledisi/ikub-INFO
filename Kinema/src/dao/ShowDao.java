@@ -1,5 +1,7 @@
 package dao;
 
+import java.sql.Time;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -12,9 +14,13 @@ import hibernate.HibernateUtil;
 
 public class ShowDao {
 
-	
 	private static final String GET_SHOW_BY_ID = "FROM shows WHERE id=:id";
 	private static final String GET_MONITORS_SHOW = "FROM Show WHERE idMonitori=:idMonitor";
+	
+	private static final String GET_MONITORS_SHOW_BY_TIME =
+			"Select show FROM Show show,Movie movie "
+			+ " WHERE ADDTIME(show.time,SEC_TO_TIME(movie.length*60))>=:thisTime and TIMEDIFF(show.time,SEC_TO_TIME(:thisLength*60))<=:thisTime";
+	
 	private static final String GET_MOVIES_SHOW = "FROM Show WHERE idMovie=:idMovie";
 	private static final String GET_ALL_SHOWS = "from Show";
 
@@ -110,9 +116,9 @@ public class ShowDao {
 		}
 		return allShows;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public boolean getMonitorsShow(int idMonitor) {
+	public List<Show> getMonitorsShow(int idMonitor) {
 		session = sessionFactory.openSession();
 		List<Show> shows = null;
 		try {
@@ -130,9 +136,35 @@ public class ShowDao {
 			session.flush();
 			session.close();
 		}
-		return shows.isEmpty();
+		return shows;
 	}
-	
+
+	@SuppressWarnings("unchecked")
+	public List<Show> getMonitorsShowByTime(Date showDate, int movieLength) {
+
+		Time time = new Time( showDate.getTime());
+		
+		session = sessionFactory.openSession();
+		List<Show> shows = null;
+		try {
+			trns = session.beginTransaction();
+			Query criteria = session.createQuery(GET_MONITORS_SHOW_BY_TIME);
+			criteria.setParameter("thisTime", time);
+			criteria.setParameter("thisLength", movieLength);
+			shows = (List<Show>) criteria.list();
+			session.getTransaction().commit();
+		} catch (RuntimeException e) {
+			if (trns != null) {
+				trns.rollback();
+			}
+			e.printStackTrace();
+		} finally {
+			session.flush();
+			session.close();
+		}
+		return shows;
+	}
+
 	@SuppressWarnings("unchecked")
 	public List<Show> getMoviesShow(int idMovie) {
 		session = sessionFactory.openSession();
@@ -175,6 +207,5 @@ public class ShowDao {
 		}
 		return show;
 	}
-	
-	
+
 }

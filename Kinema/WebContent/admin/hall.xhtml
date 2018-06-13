@@ -12,7 +12,7 @@
 </ui:insert>
 
 <h:body>
-
+	<p:growl id="hall" life="2000" />
 	<ui:insert>
 		<ui:include name="header" src="/admin/adminSidebar.xhtml" />
 	</ui:insert>
@@ -20,14 +20,18 @@
 	<div id="right-panel" class="right-panel">
 
 		<ui:insert>
-			<ui:include name="header" src="/components/rightPanel.xhtml" />
+			<ui:include name="header" src="rightPanel.xhtml" />
 		</ui:insert>
 
 
 
 		<!-- content-->
 		<div class="content mt-3">
-
+			<div
+				class="sufee-alert alert with-close alert-danger alert-dismissible fade show">
+				<span class="badge badge-pill badge-danger">Fail</span>
+				<h:messages />
+			</div>
 			<!-- forma-->
 
 			<div class="col-lg-12">
@@ -44,7 +48,9 @@
 									<div class="form-group">
 										<div class="input-group">
 											<h:inputText id="name" value="#{hallBean.hall.name}"
-												class="form-control" a:placeholder="Hall one" />
+												class="form-control" a:placeholder="Hall one"
+												required="true"
+												requiredMessage="Emri salles nuk mund te lihet bosh" />
 											<div class="input-group-btn">
 												<h:commandButton class="btn btn-primary"
 													action="#{hallBean.addHall()}" value="Submit" />
@@ -67,8 +73,8 @@
 						<strong class="card-title">Hall's Table</strong>
 					</div>
 					<div class="card-body">
-						<h:form>
-							<p:dataTable var="hall" value="#{hallBean.halls}"
+						<h:form id="hallform">
+							<p:dataTable id="halltable" var="hall" value="#{hallBean.halls}"
 								style="text-align:center" widgetVar="dataTableWidgetVar"
 								rows="5" paginator="true"
 								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -90,13 +96,9 @@
 										class="btn btn-primary fa fa-edit" onclick="editModal()" />
 								</p:column>
 								<p:column headerText="Delete">
-
-									<p:growl id="growl" life="2000" />
-									<p:growl id="messages" showDetail="true" />
 									<p:commandButton value="Delete" styleClass="deleteButton"
-										actionListener="#{hallBean.deleteHall(hall.id)}"
-										update="messages"
-										oncomplete="PF('dataTableWidgetVar').filter()" ajax="true">
+										action="#{hallBean.deleteHall(hall.id)}"
+										update=":hallform:halltable hall">
 
 										<p:confirm header="Confirm" message="Are you sure ?"
 											icon="ui-icon-alert" />

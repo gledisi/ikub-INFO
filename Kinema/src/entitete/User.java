@@ -77,6 +77,12 @@ public class User {
 	}
 	public void setRoli(Role roli) {
 		this.roli = roli;
+	}
+	public Set<Reservation> getReservations() {
+		return reservations;
+	}
+	public void setReservations(Set<Reservation> reservations) {
+		this.reservations = reservations;
 	}	
 	
 }

@@ -39,7 +39,7 @@ public class UserDao {
 	}
 
 	
-	public void edit(User user) {
+	public boolean edit(User user) {
 		session = sessionFactory.openSession();
         try {
             trns = session.beginTransaction();
@@ -50,10 +50,12 @@ public class UserDao {
                 trns.rollback();
             }
             e.printStackTrace();
+            return false;
         } finally {
             session.flush();
             session.close();
         }
+        return true;
 	}
 	
 	
@@ -81,7 +83,7 @@ public class UserDao {
 		User user=null;
         try {
             trns = session.beginTransaction();
-            Query criteria = session.createQuery("FROM user WHERE id=:id");
+            Query criteria = session.createQuery("FROM User WHERE id=:id");
         	criteria.setParameter("id", userId);
             user = (User) criteria.uniqueResult();
             session.getTransaction().commit();

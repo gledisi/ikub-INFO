@@ -14,6 +14,8 @@ public class HallDao {
 
 	
 	private static final String GET_ALL_HALLS = "from Hall";
+	private static final String GET_HALLS_BY_NAME = "from Hall Where name=:name";
+	
 	
 	private SessionFactory sessionFactory;
 	private Transaction trns = null;
@@ -26,7 +28,6 @@ public class HallDao {
 	
 	public boolean addHall(Hall hall) {
 		session = sessionFactory.openSession();
-		boolean isAdd = true;
 		try {
 			trns = session.beginTransaction();
 			session.save(hall);
@@ -36,13 +37,13 @@ public class HallDao {
 				trns.rollback();
 			}
 			e.printStackTrace();
-			isAdd = false;
+			return false;
 		} finally {
 			session.flush();
 			session.close();
 		}
 
-		return isAdd;
+		return true;
 	}
 
 	public boolean deleteHall(int idHall) {
@@ -71,9 +72,31 @@ public class HallDao {
 	public List<Hall> getAllHalls() {
 		session = sessionFactory.openSession();
 		List<Hall> allHalls = null;
-		try {
+		try { 
 			trns = session.beginTransaction();
 			Query criteria = session.createQuery(GET_ALL_HALLS);
+			allHalls = (List<Hall>) criteria.list();
+			session.getTransaction().commit();
+		} catch (RuntimeException e) {
+			if (trns != null) {
+				trns.rollback();
+			}
+			e.printStackTrace();
+		} finally {
+			session.flush();
+			session.close();
+		}
+		return allHalls;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Hall> getHallByName(String name) {
+		session = sessionFactory.openSession();
+		List<Hall> allHalls = null;
+		try {
+			trns = session.beginTransaction();
+			Query criteria = session.createQuery(GET_HALLS_BY_NAME);
+			criteria.setParameter("name", name);
 			allHalls = (List<Hall>) criteria.list();
 			session.getTransaction().commit();
 		} catch (RuntimeException e) {
