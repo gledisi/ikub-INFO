@@ -1,7 +1,6 @@
 
 package bean;
 
-import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
@@ -47,7 +46,7 @@ public class ShowBean {
 
 	}
 
-	public String addShow() throws ParseException {
+	public String addShow() {
 
 		Show showAdd = new Show();
 		Monitor monitor = new Monitor();
@@ -98,6 +97,11 @@ public class ShowBean {
 	private boolean canDeleteShow(int idShow) {
 		List<Reservation> reservations = reservationDao.getShowsReservation(idShow);
 		return reservations.isEmpty();
+	}
+	
+	public List<Show> getMoviesShow(){
+		List<Show> moviesShow = showDao.getMoviesShow(movieBean.getMovie().getId());
+		return moviesShow;
 	}
 
 	// GETTERS AND SETTERS

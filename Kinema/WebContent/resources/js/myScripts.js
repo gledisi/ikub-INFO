@@ -4,3 +4,7 @@ jQuery('.showDate').datetimepicker({
 jQuery('.movieDate').datetimepicker({
 	format: 'YYYY-MM-DD'
 });
+
+var editModal = function() {
+		$('#editModal').modal('toggle');
+}

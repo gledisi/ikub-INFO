@@ -10,11 +10,12 @@
 
 <f:metadata>
 	<f:viewParam name="movieId" value="#{movieBean.movie.id}" />
+	<f:event listener="#{movieBean.getMovieById()}" type="preRenderView"></f:event>
 </f:metadata>
 
 <h:body>
 
-	<p:growl id="growl" life="2500" />
+	<p:growl id="growl" life="7000" />
 
 	<ui:include name="header" src="clientSidebar.xhtml" />
 
@@ -26,7 +27,7 @@
 
 		<!-- content-->
 		<div class="content mt-3">
-			<span>title:</span>#{movie.title}
+			<span>title:</span>#{movieBean.movie.title}
 			<!-- tabela-->
 			<div class="col-lg-12">
 				<div class="card">
@@ -34,10 +35,10 @@
 						<strong class="card-title">Show's Table</strong>
 					</div>
 					<div class="card-body">
-						<h:form>
-							<p:dataTable var="show" value="#{showBean.shows}"
-								style="text-align:center" widgetVar="dataTableWidgetVar"
-								rows="5" paginator="true"
+						<h:form id="form">
+							<p:dataTable id="table" var="show"
+								value="#{showBean.getMoviesShow()}" style="text-align:center"
+								widgetVar="dataTableWidgetVar" rows="5" paginator="true"
 								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 								rowsPerPageTemplate="5,10,15" rowIndexVar="index">
 								<p:column headerText="#">
@@ -54,8 +55,11 @@
 									</h:outputText>
 								</p:column>
 								<p:column headerText="Reserv">
-									<h:commandButton value="Reserv" type="button"
-										class="btn btn-primary fa fa-edit" onclick="editModal()" />
+
+									<p:commandButton value="Reserv" process="@this"
+										class="btn btn-primary btn-sm"
+										action="#{reservationBean.addReservation()}"
+										update=":form:table growl" />
 								</p:column>
 							</p:dataTable>
 						</h:form>

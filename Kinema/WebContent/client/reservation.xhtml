@@ -10,8 +10,10 @@
 
 <h:body>
 
+	<p:growl id="growl" life="2000" />
+
 	<ui:include name="header" src="clientSidebar.xhtml" />
-	
+
 	<div id="right-panel" class="right-panel">
 
 		<ui:include name="header" src="rightPanel.xhtml" />
@@ -20,7 +22,38 @@
 
 		<!-- content-->
 		<div class="content mt-3">
-	
+			<div class="col-lg-12">
+				<div class="card">
+					<div class="card-header">
+						<strong class="card-title">Reservation's Table</strong>
+					</div>
+					<div class="card-body">
+						<h:form id="form">
+							<p:dataTable id="table" var="reserv"
+								value="#{reservationBean.reservations}"
+								style="text-align:center" widgetVar="dataTableWidgetVar"
+								rows="5" paginator="true"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								rowsPerPageTemplate="5,10,15" rowIndexVar="index">
+								<p:column headerText="#">
+									<h:outputText value="#{index + 1}" />
+								</p:column>
+
+								<p:column headerText="Date">
+									<h:outputText value="#{reserv.date}" />
+								</p:column>
+
+								<p:column headerText="Cancel">
+									<p:commandButton value="Cancel" process="@this"
+										styleClass="deleteButton"
+										actionListener="#{reservationBean.deleteReservation(reserv.id)}"
+										update=":form:table growl" />
+								</p:column>
+							</p:dataTable>
+						</h:form>
+					</div>
+				</div>
+			</div>
 		</div>
 		<!-- .content -->
 	</div>

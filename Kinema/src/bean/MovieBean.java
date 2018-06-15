@@ -6,7 +6,6 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 
@@ -19,7 +18,7 @@ import entitete.Show;
 import utility.Messages;
 
 @ManagedBean
-@RequestScoped
+@ViewScoped
 public class MovieBean {
 
 	private Movie movie;
@@ -52,7 +51,7 @@ public class MovieBean {
 	public String addMovie() {
 
 		Movie addMovie = createMovieObject();
-		
+
 		if (canAddMovie(addMovie.getTitle())) {
 			if (movieDao.add(movie)) {
 				Messages.addMessage("Filmi u shtua!");
@@ -81,12 +80,12 @@ public class MovieBean {
 
 		return null;
 	}
-	
+
 	public String movieDetail() {
 		FacesContext fc = FacesContext.getCurrentInstance();
-        Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
-		int id= Integer.parseInt(params.get("movieId"));
-		
+		Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
+		int id = Integer.parseInt(params.get("movieId"));
+
 		movie.setId(id);
 		System.out.println(id);
 		return "movieDetail?faces-redirect=true&includeViewParams=true";
@@ -111,6 +110,11 @@ public class MovieBean {
 		}
 		return isNull;
 	}
+
+	public String getMovieById() {
+		this.movie= movieDao.getMoviebyId(movie.getId());
+		return null;
+		}
 
 	private Movie createMovieObject() {
 		Movie newMovie = new Movie();

@@ -26,9 +26,9 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	@Column
-	private int cmimi;
+	private int price;
 	@Temporal(TemporalType.DATE)
-	private Date dataRezervimit;
+	private Date date;
 	
 	@ElementCollection
 	@ManyToOne
@@ -50,18 +50,18 @@ public class Reservation {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getCmimi() {
-		return cmimi;
+	
+	public int getPrice() {
+		return price;
 	}
-	public void setCmimi(int cmimi) {
-		this.cmimi = cmimi;
+	public void setPrice(int price) {
+		this.price = price;
 	}
-
-	public Date getDataRezervimit() {
-		return dataRezervimit;
+	public Date getDate() {
+		return date;
 	}
-	public void setDataRezervimit(Date dataRezervimit) {
-		this.dataRezervimit = dataRezervimit;
+	public void setDate(Date date) {
+		this.date = date;
 	}
 	public Set<Ticket> getTickets() {
 		return tickets;

@@ -3,7 +3,6 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
 	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
 	xmlns:p="http://primefaces.org/ui">
 
@@ -12,7 +11,7 @@
 
 
 <h:body>
-	<p:growl id="growl" life="2500" />
+	<p:growl id="growl" life="7000" />
 
 	<ui:include name="header" src="/admin/adminSidebar.xhtml" />
 
@@ -29,13 +28,12 @@
 			<!-- forma-->
 
 			<div class="col-lg-12">
+				<h:form>
+					<div class="card">
+						<div class="card-header">
+							<strong>Add Movie</strong>
+						</div>
 
-				<div class="card">
-
-					<div class="card-header">
-						<strong>Add Movie</strong>
-					</div>
-					<h:form>
 						<div class="card-body card-block">
 
 							<div class="row form-group">
@@ -44,8 +42,9 @@
 										<label for="titulli" class=" form-control-label">Movie
 											Title</label>
 										<h:inputText id="titulli" value="#{movieBean.movie.title}"
-											class="form-control" a:placeholder="Shrek(english subtitles)"
-											required="true" requiredMessage="Zgjidhni titullin e filmit" />
+											class="form-control"
+											pt:placeholder="Shrek(english subtitles)" required="true"
+											requiredMessage="Zgjidhni titullin e filmit" />
 									</div>
 								</div>
 								<div class="col col-sm-3">
@@ -64,7 +63,7 @@
 									<div class="form-group">
 										<label for="length" class="form-control-label">Length</label>
 										<h:inputText id="length" value="#{movieBean.movie.length}"
-											class="form-control" a:placeholder="120"
+											class="form-control" pt:placeholder="120"
 											validatorMessage="Kohezgjatja filmit: Jepni nje numer nga 30-400 !">
 											<f:validateLongRange minimum="30" maximum="400" />
 										</h:inputText>
@@ -74,7 +73,7 @@
 									<div class="form-group">
 										<label for="imdb" class="form-control-label">Imdb</label>
 										<h:inputText id="imdb" value="#{movieBean.movie.imdb}"
-											class="form-control" a:placeholder="7.8"
+											class="form-control" pt:placeholder="7.8"
 											validatorMessage="Imdb: Jepni nje numer dhjetor nga 1-10 !">
 											<f:validateDoubleRange minimum="1" maximum="10" />
 										</h:inputText>
@@ -123,18 +122,16 @@
 										<div class="input-group">
 											<h:inputTextarea id="storyline"
 												value="#{movieBean.movie.storyline}" class="form-contro"
-												cols="55" rows="3" a:placeholder="Storyline of the movie..."
-												required="true"
+												cols="55" rows="3"
+												pt:placeholder="Storyline of the movie..." required="true"
 												requiredMessage="Pershkrimi i filmit nuk duhet bosh!"
 												validatorMessage="StoryLine: duhet te kete 50-250 karaktere!">
-												<f:validateRegex pattern="{50,255}" />
+												<f:validateRegex pattern="[a-z]{50,255}" />
 											</h:inputTextarea>
 										</div>
 									</div>
 								</div>
 							</div>
-
-
 						</div>
 
 						<div class="card-footer">
@@ -143,14 +140,15 @@
 								<h:commandButton class="btn btn-primary btn-sm"
 									action="#{movieBean.addMovie()}" value="Submit" />
 								<h:commandButton type="reset"
-									class="btn btn-danger btn-sm fa fa-ban" value="reset" />
+									class="btn btn-danger btn-sm" value="reset" />
 
 							</div>
 						</div>
-					</h:form>
-				</div>
-
+					</div>
+				</h:form>
 			</div>
+
+
 
 
 			<!-- tabela-->
@@ -161,8 +159,8 @@
 						<strong class="card-title">Movie's Table</strong>
 					</div>
 					<div class="card-body">
-						<h:form id="movieform">
-							<p:dataTable id="movietable" var="movie"
+						<h:form id="movieForm">
+							<p:dataTable id="movieTable" var="movie"
 								value="#{movieBean.movies}" style="text-align:center"
 								widgetVar="dataTableWidgetVar" rows="5" paginator="true"
 								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -192,7 +190,7 @@
 
 									<p:commandButton value="Delete" styleClass="deleteButton"
 										actionListener="#{movieBean.deleteMovie(movie.id)}"
-										update=":movieform:movietable growl">
+										update=":movieForm:movieTable growl">
 
 										<p:confirm header="Confirm" message="Are you sure ?"
 											icon="ui-icon-alert" />
@@ -216,24 +214,6 @@
 		<!-- .content -->
 	</div>
 	<!-- Modal per editimin -->
-	<div class="modal fade bs-example-modal-lg" id="editMovie">
-		<div class="modal-dialog">
-			<div class="modal-content">
-
-				<div class="modal-header">
-					<h:commandButton type="button" class="close"
-						pt:data-dismiss="modal" value="x" />
-
-					<h4 class="modal-title" id="editTaskModal">Edito film</h4>
-				</div>
-
-
-				<div class="modal-body"></div>
-				<div class="modal-footer"></div>
-
-			</div>
-		</div>
-	</div>
 
 	<ui:include name="footer" src="/components/footer.xhtml" />
 

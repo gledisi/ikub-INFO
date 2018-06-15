@@ -7,6 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
+import entitete.Monitor;
 import entitete.Reservation;
 import hibernate.HibernateUtil;
 
@@ -16,6 +17,7 @@ public enum ReservationDao {
 	// Querys for Reservation
 	private static final String ALL_RESERVATIONS = "from Reservation";
 	private static final String SHOWS_RESERVATION = "FROM Reservation WHERE idShow=:idShow";
+	private static final String USERS_RESERVATION = "FROM Reservation WHERE idUser=:idUser";
 
 	private SessionFactory sessionFactory=HibernateUtil.getSessionFactory();;
 	private Transaction trns = null;
@@ -127,6 +129,50 @@ public enum ReservationDao {
 			session.close();
 		}
 		return showsReservation;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Reservation> getUsersReservation(int idUser) {
+		session = sessionFactory.openSession();
+		List<Reservation> userReservation = null;
+		try {
+			trns = session.beginTransaction();
+			Query criteria = session.createQuery(USERS_RESERVATION);
+			criteria.setParameter("idUser", idUser);
+			userReservation = (List<Reservation>) criteria.list();
+			session.getTransaction().commit();
+		} catch (RuntimeException e) {
+			if (trns != null) {
+				trns.rollback();
+			}
+			e.printStackTrace();
+		} finally {
+			session.flush();
+			session.close();
+		}
+		return userReservation;
+	}
+
+	public boolean deleteReservation(int idRes) {
+		session = sessionFactory.openSession();
+		boolean isDelete = true;
+		try {
+			trns = session.beginTransaction();
+			Reservation reservation = (Reservation) session.load(Reservation.class, new Integer(idRes));
+			session.delete(reservation);
+			session.getTransaction().commit();
+		} catch (RuntimeException e) {
+			if (trns != null) {
+				trns.rollback();
+			}
+			e.printStackTrace();
+			isDelete = false;
+		} finally {
+			session.flush();
+			session.close();
+		}
+
+		return isDelete;
 	}
 
 }

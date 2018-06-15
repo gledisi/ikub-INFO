@@ -13,6 +13,7 @@
 
 <h:body>
 
+	<p:growl id="growl" life="7000" showDetail="false" />
 	<ui:insert>
 		<ui:include name="header" src="/admin/adminSidebar.xhtml" />
 	</ui:insert>
@@ -69,8 +70,7 @@
 									<div class="form-group">
 										<label for="rows" class="form-control-label">Rows</label>
 										<h:inputText id="rows" value="#{monitorBean.rows}"
-											class="form-control" a:placeholder="6"
-											required="true"
+											class="form-control" a:placeholder="6" required="true"
 											requiredMessage="Numri rreshtave eshte bosh!"
 											validatorMessage="Rreshti karrigeve: Jepni nje numer nga 5-25 !">
 											<f:validateLongRange minimum="5" maximum="25" />
@@ -81,8 +81,7 @@
 									<div class="form-group">
 										<label for="columns" class="form-control-label">Columns</label>
 										<h:inputText id="columns" value="#{monitorBean.columns}"
-											class="form-control" a:placeholder="8"
-											required="true"
+											class="form-control" a:placeholder="8" required="true"
 											requiredMessage="Numri Kolonave eshte bosh!"
 											validatorMessage="Kolona karrigeve: Jepni nje numer nga 5-25 !">
 											<f:validateLongRange minimum="5" maximum="25" />
@@ -115,8 +114,8 @@
 						<strong class="card-title">Monitor's Table</strong>
 					</div>
 					<div class="card-body">
-						<h:form>
-							<p:dataTable var="monitor" value="#{monitorBean.monitors}"
+						<h:form id="monitorForm">
+							<p:dataTable id="monitorTable" var="monitor" value="#{monitorBean.monitors}"
 								style="text-align:center" widgetVar="dataTableWidgetVar"
 								rows="5" paginator="true"
 								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -143,12 +142,9 @@
 								</p:column>
 								<p:column headerText="Delete">
 
-									<p:growl id="growl" life="2500" />
-									<p:growl id="messages" showDetail="true" />
 									<p:commandButton value="Delete" styleClass="deleteButton"
 										actionListener="#{monitorBean.deleteMonitor(monitor.id)}"
-										update="messages"
-										oncomplete="PF('dataTableWidgetVar').filter()">
+										update=":monitorForm:monitorTable growl">
 
 										<p:confirm header="Confirm" message="Are you sure ?"
 											icon="ui-icon-alert" />
